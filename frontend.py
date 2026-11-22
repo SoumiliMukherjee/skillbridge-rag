@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from job_fetcher import get_live_jobs
-from rag_engine import build_vector_store, recommend_jobs
+from rag_engine import build_vector_stores, recommend_jobs
 
 # Load Streamlit Cloud Secrets if deployed
 for key in ("GROQ_API_KEY", "ADZUNA_APP_ID", "ADZUNA_APP_KEY"):
@@ -16,7 +16,7 @@ st.write("Enter your skills to find matching live tech jobs with direct apply li
 @st.cache_resource(show_spinner="Indexing live tech jobs...")
 def load_rag():
     jobs, status = get_live_jobs()
-    return jobs, build_vector_store(jobs), status
+    return jobs, build_vector_stores(jobs), status
 
 
 jobs, vector_store, source_msg = load_rag()
