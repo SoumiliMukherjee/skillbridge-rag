@@ -1,11 +1,25 @@
-import requests
+import os
 import streamlit as st
+from job_fetcher import get_live_jobs
+from rag_engine import build_vector_store, recommend_jobs
 
-API_URL = "http://127.0.0.1:8000"
+# Load Streamlit Cloud Secrets if deployed
+for key in ("GROQ_API_KEY", "ADZUNA_APP_ID", "ADZUNA_APP_KEY"):
+    if key in st.secrets:
+        os.environ[key] = st.secrets[key]
 
 st.set_page_config(page_title="SkillBridge RAG", page_icon="💼")
 st.title("💼 SkillBridge RAG")
 st.write("Enter your skills to find matching live tech jobs with direct apply links.")
+
+
+@st.cache_resource(show_spinner="Indexing live tech jobs...")
+def load_rag():
+    jobs, status = get_live_jobs()
+    return jobs, build_vector_store(jobs), status
+
+
+jobs, vector_store, source_msg = load_rag()
 
 skills = st.text_input(
     "Your Skills",
@@ -18,32 +32,9 @@ if st.button("Find Matching Jobs", type="primary"):
         st.warning("Please enter at least one skill.")
     else:
         with st.spinner("Finding best job matches..."):
-            try:
-                res = requests.post(
-                    f"{API_URL}/match",
-                    json={"skills": skills.strip(), "top_k": 4},
-                    timeout=60,
-                )
-                res.raise_for_status()
-                data = res.json()
-
-                st.caption(f"Searched {data['jobs_searched']} live jobs • {data['source_message']}")
-                st.markdown(data["recommendations"])
-            except Exception as e:
-                st.error(f"Could not connect to backend: {e}")
-
-st.divider()
+            st.caption(f"Searched {len(jobs)} live jobs • {source_msg}")
+            st.markdown(recommend_jobs(skills.strip(), vector_store, top_k=4))
 
 with st.expander("📋 Browse All Indexed Live Jobs"):
-    try:
-        jobs_res = requests.get(f"{API_URL}/jobs", timeout=10)
-        jobs_res.raise_for_status()
-        all_jobs = jobs_res.json().get("jobs", [])
-
-        st.caption(f"Showing all {len(all_jobs)} indexed jobs:")
-        for i, job in enumerate(all_jobs, 1):
-            st.markdown(
-                f"**{i}. {job['title']}** — {job['company']} ({job['location']}) • [Apply Here]({job['apply_link']})"
-            )
-    except Exception as e:
-        st.error(f"Could not load job list: {e}")
+    for i, job in enumerate(jobs, 1):
+        st.markdown(f"**{i}. {job['title']}** — {job['company']} ({job['location']}) • [Apply Here]({job['apply_link']})")
