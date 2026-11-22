@@ -1,0 +1,16 @@
+
+fastapi
+uvicorn
+streamlit
+requests
+python-dotenv
+beautifulsoup4
+langchain
+langchain-core
+langchain-community
+langchain-huggingface
+langchain-groq
+faiss-cpu
+sentence-transformers
+
+

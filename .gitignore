@@ -1,0 +1,9 @@
+venv/
+.venv/
+.env
+__pycache__/
+*.pyc
+*.pyo
+jobs_cache.json
+.DS_Store
+.vscode/
