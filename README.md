@@ -1,6 +1,9 @@
 # 💼 SkillBridge RAG — Live Tech Job Matcher & Skill-Gap Analyzer
 
 A full-stack Retrieval-Augmented Generation (RAG) application that semantically matches a candidate's technical skills against live software and AI job openings, generating ranked recommendations, skill-gap analyses, and verified direct apply links.
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://skillbridge-rag-udt7nvjdydwjgvtrfvqzlg.streamlit.app/)
+
+**Live Demo:** [https://skillbridge-rag-udt7nvjdydwjgvtrfvqzlg.streamlit.app/](https://skillbridge-rag-udt7nvjdydwjgvtrfvqzlg.streamlit.app/)
 
 ## 🏗️ Architecture & Tech Stack
 
