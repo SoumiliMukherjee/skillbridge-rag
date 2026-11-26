@@ -9,7 +9,7 @@ load_dotenv()
 
 CACHE_FILE = "jobs_cache.json"
 BACKUP_FILE = "jobs_backup.json"
-CACHE_EXPIRY_SECONDS = 12 * 3600  # 12 hours
+CACHE_EXPIRY_SECONDS = 12 * 3600  
 
 
 def clean_html(raw_html: str) -> str:
